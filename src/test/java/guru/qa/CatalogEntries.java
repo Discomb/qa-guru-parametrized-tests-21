@@ -7,7 +7,7 @@ public enum CatalogEntries {
     MEAT("Мясо, птица, колбасы"),
     FISH("Рыба, икра");
 
-    String description;
+    final String description;
 
     CatalogEntries(String description) {
         this.description = description;
