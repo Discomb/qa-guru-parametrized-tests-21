@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static com.codeborne.selenide.Configuration.baseUrl;
@@ -21,6 +22,19 @@ public class VprokTests extends BaseTest {
     @DisplayName("Проверка соответствия строки результата поиска запросу")
     @ParameterizedTest(name = "Запрос \"{0}\"")
     public void searchResultMatchesTheQueryTest(String searchQuery) {
+        open(baseUrl);
+
+        $("input[data-test-search-input='true']").setValue(searchQuery);
+        $("input[data-test-search-input='true']").submit();
+
+        $("div[class^='SearchResultsInformer']").shouldHave(Condition.matchText(String.format("(?:По запросу \"%s\" (найдено|найден) )\\d{1,}(?: (товара|товаров|товар))", searchQuery)));
+
+    }
+
+    @MethodSource("guru.qa.TestData#testDataFactory")
+    @DisplayName("Проверка соответствия строки результата поиска запросу (Method Source)")
+    @ParameterizedTest(name = "Запрос \"{0}\"")
+    public void searchResultMatchesTheQueryMSTest(String searchQuery) {
         open(baseUrl);
 
         $("input[data-test-search-input='true']").setValue(searchQuery);
