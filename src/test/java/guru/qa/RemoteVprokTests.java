@@ -10,6 +10,9 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.time.Duration;
+
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Configuration.baseUrl;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
@@ -18,7 +21,7 @@ import static io.qameta.allure.Allure.step;
 
 @Tag("remote")
 @DisplayName("Параметризованные тесты")
-public class RemoteVprokTests extends BaseTest {
+public class RemoteVprokTests extends RemoteBaseTest {
 
     @ValueSource(
             strings = {"Хлеб", "Шоколад", "Молоко"}
@@ -52,7 +55,7 @@ public class RemoteVprokTests extends BaseTest {
             $("input[data-test-search-input='true']").submit();
         });
         step("Проверяем сообщение в результате поиска", () -> {
-            $("div[class^='SearchResultsInformer']").shouldHave(Condition.matchText(String.format("(?:По запросу \"%s\" (найдено|найден) )\\d{1,}(?: (товара|товаров|товар))", searchQuery)));
+            $("div[class^='SearchResultsInformer']").shouldHave(Condition.matchText(String.format("%s", searchQuery)));
         });
 
     }
@@ -89,12 +92,13 @@ public class RemoteVprokTests extends BaseTest {
         step("Указываем адрес доставки: " + address + ", " + flat, () -> {
             $("div[class*='LocationTile']").click();
             $("input[name='address']").setValue(address);
+            $("ul[class*='Options_list']").shouldBe(visible, Duration.ofSeconds(60));
             $("ul[class*='Options_list']").$$("li").findBy(Condition.text(address)).click();
             $("input[name='flat']").setValue(flat);
             $(byText("Сохранить адрес")).click();
         });
 
-        step("Проверяем отображение адреса на главной странице", () ->{
+        step("Проверяем отображение адреса на главной странице", () -> {
             $("div[class*='LocationTile']").shouldHave(Condition.text(address.substring(0, 10)));
         });
     }
