@@ -76,11 +76,11 @@ public class RemoteVprokTests extends RemoteBaseTest {
         });
     }
 
-    @CsvSource(delimiter = '|', textBlock = """
-            улица Новаторов, 6          | 54
-            Ломоносовский проспект, 23  | 135
-            Высокая улица, 5к2          | 85
-            """)
+    @CsvSource(delimiter = '|', value = {
+            "улица Новаторов, 6          | 54",
+            "Ломоносовский проспект, 23  | 135",
+            "Высокая улица, 5к2          | 85"}
+            )
     @DisplayName("Проверка отображения введенного адреса на кнопке")
     @Description("Проверка отображения введенного адреса на кнопке")
     @ParameterizedTest(name = "Адрес: {0}, кв. {1}")
